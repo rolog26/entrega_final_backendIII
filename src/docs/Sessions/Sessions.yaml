@@ -1,0 +1,178 @@
+path:
+  /api/sessions/register:
+    post:
+      summary: Registro de nuevo usuario
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/registerUser'
+      responses:
+        '201':
+          description: 'Usuario registrado exitosamente'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: string
+                    description: Id del usuario registrado
+        '400':
+          description: 'Incomplete values or user already exists'
+  /api/sessions/login:
+    post:
+      summary: Inicio de sesión de usuario
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/loginUser'
+      responses:
+        '200':
+          description: 'Inicio de sesión exitoso'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Logged in
+        '400':
+          description: 'Incomplete values or incorrect password'
+        '404':
+          description: 'User does not exist'
+  /api/sessions/current:
+    get:
+      summary: Obtener usuario actual
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: Usuario actual obtenido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userToken'
+  /api/sessions/unprotectedLogin:
+    post:
+      summary: Inicio de sesión sin protección
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/loginUser'
+      responses:
+        '200':
+          description: 'Unprotected logged in'
+        '400':
+          description: 'Incomplete values or incorrect password'
+        '404':
+          description: 'User does not exist'
+  /api/sessions/unprotectedCurrent:
+    get:
+      summary: Obtener usuario actual sin protección
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: Usuario actual obtenido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+components:
+  requestBodies:
+    registerUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+      example:
+        first_name: Juan
+        last_name: Pérez
+        email: juan.perez@gmail.com
+        password: 123asd
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+      example:
+        email: juan.perez@gmail.com
+        password: 123asd
+
+  schemas:
+    userToken:
+      type: object
+      properties:
+        _id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+      example:
+        _id: '523j6qw89vf1pc'
+        first_name: Juan
+        last_name: Pérez
+        email: juan.perez@gmail.com
+        role: user
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      example:
+        _id: '523j6qw89vf1pc'
+        first_name: Juan
+        last_name: Pérez
+        email: juan.perez@gmail.com
+        password: 123asd
